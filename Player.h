@@ -13,6 +13,11 @@ public:
   virtual void clean();
   void handleInput();
   void init();
-  
   int m_Num;
+
+private:
+  
+
+
+
 };

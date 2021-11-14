@@ -1,6 +1,9 @@
 #include "Player.h"
 
-Player::Player(const LoaderParams* pParams) : SDLGameObject(pParams) {}
+Player::Player(const LoaderParams* pParams) : SDLGameObject(pParams)
+{
+
+}
 
 void Player::init(){
   m_Num = 0;
@@ -20,9 +23,13 @@ void Player::draw()
 
 void Player::update()
 {
+
+  SDLGameObject::TranslateX(2);
+  SDLGameObject::TranslateY(2);
+
   handleInput();
   m_currentFrame = (SDL_GetTicks() / 100) % 6;
-  SDLGameObject::update();
+  SDLGameObject::update(1);
 }
 
 void Player::handleInput()
