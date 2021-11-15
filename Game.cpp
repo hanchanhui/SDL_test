@@ -47,7 +47,7 @@ void Game::render()
 {
   SDL_RenderClear(m_pRenderer);
 
-  TheTextureManager::Instance()->draw("Background",0, 0, 640, 360, m_pRenderer);
+  TheTextureManager::Instance()->draw("Background",0, 0, 640, 360, m_pRenderer, SDL_FLIP_NONE);
 
   for(int i = 0; i < m_gameObjects.size(); i++)
   {

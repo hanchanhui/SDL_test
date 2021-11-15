@@ -66,7 +66,7 @@ void Player::handleInput()
 
 void Player::Collider()
 {
-  if()
+  
 }
 
 void Player::clean()
