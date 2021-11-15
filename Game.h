@@ -24,7 +24,6 @@ public:
   void handleEvents();
   void clean();
   SDL_Renderer* getRenderer() const { return m_pRenderer; }
-  std::vector<GameObject*> getGameObjects() const { return m_gameObjects; }
   void quit() { m_bRunning = false; }
 
 private:

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <math.h>
 
 class Vector2D {
@@ -23,7 +25,7 @@ class Vector2D {
     friend Vector2D& operator+=(Vector2D& v1, const Vector2D& v2);
     friend Vector2D& operator-=(Vector2D& v1, const Vector2D& v2);
 
-  private:
+  public:
     float m_x;
     float m_y;
 };

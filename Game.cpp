@@ -36,8 +36,8 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
     return false;
   }
 
-  m_gameObjects.push_back(new Player(new LoaderParams(100, 250, 128, 82, "animate")));
-  m_gameObjects.push_back(new Enemy(new LoaderParams(450, 250, 128, 82, "Enemy")));
+  m_gameObjects.push_back(new Player(new LoaderParams(100, 0, 128, 82, "animate")));
+  m_gameObjects.push_back(new Enemy(new LoaderParams(450, 0, 128, 82, "Enemy")));
 
   m_bRunning = true;
   return true;
@@ -47,7 +47,7 @@ void Game::render()
 {
   SDL_RenderClear(m_pRenderer);
 
-  TheTextureManager::Instance()->draw("Background",0, 0, 640, 360, m_pRenderer, SDL_FLIP_NONE);
+  TheTextureManager::Instance()->draw("Background",0, 0, 640, 360, m_pRenderer);
 
   for(int i = 0; i < m_gameObjects.size(); i++)
   {
