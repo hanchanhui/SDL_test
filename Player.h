@@ -14,6 +14,9 @@ public:
   virtual void clean();
   void handleInput();
   void init();
+
+private:
+  
   int m_Num;
 
 

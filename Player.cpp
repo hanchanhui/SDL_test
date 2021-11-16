@@ -23,8 +23,7 @@ void Player::draw()
 void Player::update()
 {
   SDLGameObject::update();
-  //m_velocity.setX(1);
-  //m_velocity.setY(1);
+  
 
   handleInput();
   m_currentFrame = (SDL_GetTicks() / 100) % 6;

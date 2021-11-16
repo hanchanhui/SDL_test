@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "Vector2D.h"
 
+
 class SDLGameObject : public GameObject
 {
 public:
@@ -14,15 +15,17 @@ public:
   virtual ~SDLGameObject() {}
 
   void SetMass(float mass) {m_Mass = mass;}
-    void SetFravity(float gravity){m_Gravity = gravity;}
+  void SetFravity(float gravity){m_Gravity = gravity;}
 
-    void ApplyForce(Vector2D F){m_Force = F;}
-    void ApplyForceX(float Fx){m_Force.m_x = Fx;}
-    void ApplyForceY(float Fy){m_Force.m_y = Fy;}
-    void UnSetForce(){m_Force = Vector2D(0,0);}
+  void ApplyForce(Vector2D F){m_Force = F;}
+  void ApplyForceX(float Fx){m_Force.m_x = Fx;}
+  void ApplyForceY(float Fy){m_Force.m_y = Fy;}
+  void UnSetForce(){m_Force = Vector2D(0,0);}
 
-    void ApplyFriction(Vector2D Fr){m_Friction = Fr;}
-    void UnSetFriction(){m_Friction = Vector2D(0,0);}
+  void ApplyFriction(Vector2D Fr){m_Friction = Fr;}
+  void UnSetFriction(){m_Friction = Vector2D(0,0);}
+
+  
 
 protected:
   std::string m_textureID;
@@ -43,4 +46,5 @@ protected:
   Vector2D m_position;
   Vector2D m_velocity;
   Vector2D m_acceleration;
+
 };
