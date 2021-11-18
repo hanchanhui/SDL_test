@@ -25,6 +25,8 @@ public:
   void ApplyFriction(Vector2D Fr){m_Friction = Fr;}
   void UnSetFriction(){m_Friction = Vector2D(0,0);}
 
+  Vector2D GetPos() { return m_position; }
+
   
 
 protected:

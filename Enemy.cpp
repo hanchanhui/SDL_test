@@ -5,6 +5,14 @@ Enemy::Enemy(const LoaderParams* pParams) : SDLGameObject(pParams)
 
 }
 
+void Enemy::init()
+{
+  enemy.x = m_position.getX();
+  enemy.y = m_position.getY();
+  enemy.w = 128;
+  enemy.h = 82;
+}
+
 void Enemy::draw()
 {
   SDLGameObject::draw();

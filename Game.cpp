@@ -37,7 +37,7 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
   }
 
   m_gameObjects.push_back(new Player(new LoaderParams(100, 0, 128, 82, "animate")));
-  m_gameObjects.push_back(new Enemy(new LoaderParams(450, 0, 128, 82, "Enemy")));
+  m_enemyObjects.push_back(new Enemy(new LoaderParams(450, 0, 128, 82, "Enemy")));
 
   m_bRunning = true;
   return true;
@@ -54,6 +54,11 @@ void Game::render()
     m_gameObjects[i]->draw();
   }
 
+  for(int i = 0; i < m_enemyObjects.size(); i++)
+  {
+    m_enemyObjects[i]->draw();
+  }
+
   SDL_RenderPresent(m_pRenderer);
 }
 
@@ -62,6 +67,11 @@ void Game::update()
   for(int i = 0; i < m_gameObjects.size(); i++)
   {
     m_gameObjects[i]->update();
+  }
+
+  for(int i = 0; i < m_enemyObjects.size(); i++)
+  {
+    m_enemyObjects[i]->update();
   }
 }
 

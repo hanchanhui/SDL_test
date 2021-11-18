@@ -4,11 +4,25 @@
 class GameObject
 {
 public:
-  virtual void draw() = 0;
-  virtual void update() = 0;
-  virtual void clean() = 0;
+  virtual void draw() {};
+  virtual void update() {};
+  virtual void clean() {};
   virtual ~GameObject() {}
+  
 
-protected:
-  GameObject(const LoaderParams* pParams) {}
+public:
+  GameObject(const LoaderParams* pParams) 
+  {
+      m_x = pParams->getX();
+      m_y = pParams->getY();
+      m_width = pParams->getWidth();
+      m_height = pParams->getHeight();
+  }
+
+  int m_x;
+  int m_y;
+  int m_width;
+  int m_height;
+  
+
 };
