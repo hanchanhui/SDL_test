@@ -4,7 +4,8 @@ Wall::Wall(const LoaderParams* pParams) : SDLGameObject(pParams) {}
 
 void Wall::draw()
 {
-  SDLGameObject::drawWall();
+  SDLGameObject::draw();
+  SDLGameObject::flip = SDL_FLIP_NONE;
 }
 
 void Wall::update()

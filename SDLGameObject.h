@@ -8,8 +8,7 @@ class SDLGameObject : public GameObject
 public:
   SDLGameObject(const LoaderParams* pParams);
   virtual void draw();
-  virtual void drawDir();
-  virtual void drawWall();
+  virtual void drawFrame();
   virtual void update();
   virtual void clean();
   virtual ~SDLGameObject() {}
@@ -28,6 +27,8 @@ protected:
   int m_height;
   int m_currentRow;
   int m_currentFrame;
+
+  SDL_RendererFlip flip;
 
   Vector2D m_position;
   Vector2D m_velocity;

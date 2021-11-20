@@ -14,12 +14,10 @@ public:
   virtual void update();
   virtual void clean();
   void handleInput();
-  void init();
   void Gravity(float gravity);
   void checkCollision();
 
 private:
-  int m_Num;
-  int JumpCount;
+  bool isGrounded;
 
 };

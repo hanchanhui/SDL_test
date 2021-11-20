@@ -2,20 +2,18 @@
 
 Player::Player(const LoaderParams* pParams) : SDLGameObject(pParams) {}
 
-void Player::init(){
-  m_Num = 0;
-  JumpCount = 0;
-}
+
 
 void Player::draw()
 {
-  if(m_Num == 0){
+  if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RIGHT))
+  {
+    SDLGameObject::drawFrame();
+  }else if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_LEFT))
+  {
+    SDLGameObject::drawFrame();
+  }else{
     SDLGameObject::draw();
-  }
-  else if(m_Num == 1){
-    SDLGameObject::draw();
-  }else if (m_Num == 2){
-    SDLGameObject::drawDir();
   }
 }
 
@@ -24,34 +22,37 @@ void Player::update()
   m_currentFrame = (SDL_GetTicks() / 100) % 6;
 
   handleInput();
-  Gravity(0.1);
   checkCollision();
   SDLGameObject::update();
 }
 
 void Player::handleInput()
 {
+  //좌우 키
   if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RIGHT)) {
+    SDLGameObject::flip = SDL_FLIP_NONE;
     m_velocity.setX(2);
-    SDLGameObject::draw();
-    m_Num = 1;
   }
   else if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_LEFT)) {
+    SDLGameObject::flip = SDL_FLIP_HORIZONTAL;
     m_velocity.setX(-2);
-    SDLGameObject::drawDir();
-    m_Num = 2;
   }
   else{
     m_velocity.setX(0);
   }
-  
+  // 점프
   if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_SPACE))
   {
-    if((JumpCount == 1) && (m_position.getY() < m_position.getY() + 30)){
-      m_velocity.setY(-4);
-      Gravity(0.1);
-      JumpCount = 0;
+    if(isGrounded){
+      m_velocity.setY(-10);
+      Gravity(2.5);
+      isGrounded = false;
     }
+  }
+  // 공격
+  if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_LCTRL))
+  {
+    
   }
 
 }
@@ -61,14 +62,14 @@ void Player::checkCollision()
   std::vector<GameObject*> collWall = TheGame::Instance()->getWall();
 
   int plyLeft = m_position.getX();
-  int plyRight = plyLeft + m_width - 10;
+  int plyRight = plyLeft + m_width;
   int plyTop = m_position.getY();
   int plyBottom = plyTop + m_height;
 
   for(int i = 0; i < collWall.size(); i++)
   {
-    int wallLeft = dynamic_cast<SDLGameObject*>(collWall[i])->GetPos().getX() + 10;
-    int wallRight = wallLeft + dynamic_cast<SDLGameObject*>(collWall[i])->GetWidth() - 25;
+    int wallLeft = dynamic_cast<SDLGameObject*>(collWall[i])->GetPos().getX() ;
+    int wallRight = wallLeft + dynamic_cast<SDLGameObject*>(collWall[i])->GetWidth();
     int wallTop = dynamic_cast<SDLGameObject*>(collWall[i])->GetPos().getY() + 10;
     int wallBottom = wallTop + dynamic_cast<SDLGameObject*>(collWall[i])->GetHeight();
 
@@ -85,13 +86,13 @@ void Player::checkCollision()
 
         m_velocity.setY(0);
         Gravity(0.0);
-        JumpCount = 1;
+        isGrounded = true; // 바닥 인식
       }
       // 윗방향
       else if(m_velocity.getY() < 0 && plyTop <= wallBottom && plyTop > wallTop 
           && plyLeft != wallRight && plyRight != wallLeft)
       {
-        m_position.setY(wallBottom);
+        m_position.setY(wallBottom - 25);
         plyTop = m_position.getY();
         plyBottom = plyTop + m_height;
 
@@ -101,18 +102,21 @@ void Player::checkCollision()
       if(m_velocity.getX() < 0 && plyLeft <= wallRight && plyLeft > wallLeft 
           && plyTop != wallBottom && plyBottom != wallTop)
       {
-          m_position.setX(wallRight);
+          m_position.setX(wallRight - 20);
           m_velocity.setX(0);
       }
       // 오른방향
       else if(m_velocity.getX() > 0 && plyRight >= wallLeft && plyRight < wallRight 
         && plyTop != wallBottom && plyBottom != wallTop)
       {
-        m_position.setX(wallLeft - m_width);
+        m_position.setX(wallLeft - m_width + 20);
         m_velocity.setX(0);
       }
     }
     
+  }
+  if(m_position.getY() > 300){ // 맵 밖을 이탈하면 점프를 할 수 없이 떨어지는 형식
+    isGrounded = false;
   }
 
 }
