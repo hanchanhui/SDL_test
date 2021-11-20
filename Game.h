@@ -7,8 +7,6 @@
 #include <vector>
 #include "InputHandler.h"
 
-static const int Game_WIDTH = 640;
-static const int Game_HEIGHT = 360;
 
 class Game
 {
@@ -27,8 +25,7 @@ public:
   void handleEvents();
   void clean();
   SDL_Renderer* getRenderer() const { return m_pRenderer; }
-  std::vector<GameObject*> getGameObject() const { return m_gameObjects; }
-  std::vector<GameObject*> getEnemyObject() const { return m_enemyObjects; }
+  std::vector<GameObject*> getWall() const { return m_wall; }
   void quit() { m_bRunning = false; }
 
 private:
@@ -37,9 +34,11 @@ private:
   SDL_Window* m_pWindow;
   SDL_Renderer* m_pRenderer;
   bool m_bRunning;
+  int boxX;
 
   std::vector<GameObject*> m_gameObjects;
-  std::vector<GameObject*> m_enemyObjects;
+  std::vector<GameObject*> m_wall;
+
 };
 typedef Game TheGame;
 

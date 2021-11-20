@@ -8,9 +8,4 @@ public:
   virtual void draw();
   virtual void update();
   virtual void clean();
-  void init();
-
-public:
-  SDL_Rect enemy;
-  
 };

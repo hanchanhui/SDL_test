@@ -1,13 +1,10 @@
 #include "Player.h"
 
-Player* Player::s_pInstance = 0;
-
-Player::Player(const LoaderParams* pParams) : SDLGameObject(pParams)  {
-  
-}
+Player::Player(const LoaderParams* pParams) : SDLGameObject(pParams) {}
 
 void Player::init(){
   m_Num = 0;
+  JumpCount = 0;
 }
 
 void Player::draw()
@@ -24,12 +21,12 @@ void Player::draw()
 
 void Player::update()
 {
-  SDLGameObject::update();
-  move(TheGame::Instance()->getEnemyObject());
-  
-  handleInput();
   m_currentFrame = (SDL_GetTicks() / 100) % 6;
-  
+
+  handleInput();
+  Gravity(0.1);
+  checkCollision();
+  SDLGameObject::update();
 }
 
 void Player::handleInput()
@@ -37,81 +34,92 @@ void Player::handleInput()
   if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RIGHT)) {
     m_velocity.setX(2);
     SDLGameObject::draw();
-    mCollider.x = m_position.getX();
     m_Num = 1;
+  }
+  else if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_LEFT)) {
+    m_velocity.setX(-2);
+    SDLGameObject::drawDir();
+    m_Num = 2;
   }
   else{
     m_velocity.setX(0);
   }
-
-  if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_LEFT)) {
-    m_velocity.setX(-2);
-    SDLGameObject::drawDir();
-    mCollider.x = m_position.getX();
-    m_Num = 2;
-  }
-
-  if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_UP)) {
-    m_velocity.setY(-4);
-    mCollider.y = m_position.getY();
-  }else if(m_position.getY() > 290){
-    m_velocity.setY(0);
-    mCollider.y = m_position.getY();
-  }
   
-}
-
-void Player::move(std::vector<GameObject*> collider)
-{
-  if( m_position.getX() < 0 || checkCollision(TheGame::Instance()->getGameObject(), collider))
+  if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_SPACE))
   {
-      m_velocity.setX(0);
+    if((JumpCount == 1) && (m_position.getY() < m_position.getY() + 30)){
+      m_velocity.setY(-4);
+      Gravity(0.1);
+      JumpCount = 0;
+    }
   }
+
 }
 
-bool Player::checkCollision(std::vector<GameObject*> a, std::vector<GameObject*> b)
+void Player::checkCollision()
 {
-    int leftA, leftB;
-    int rightA, rightB;
-    int topA, topB;
-    int bottomA, bottomB;
+  std::vector<GameObject*> collWall = TheGame::Instance()->getWall();
 
-    for( int Abox = 0; Abox < a.size(); Abox++){
-      leftA = dynamic_cast<SDLGameObject*>(a)->GetPos().getX();
-      rightA = a[Abox]->m_x + a[Abox]->m_width;
-      topA = a[Abox]->m_y;
-      bottomA = a[Abox]->m_y + a[Abox]->m_height;
+  int plyLeft = m_position.getX();
+  int plyRight = plyLeft + m_width - 10;
+  int plyTop = m_position.getY();
+  int plyBottom = plyTop + m_height;
 
-      for( int Bbox = 0; Bbox < b.size(); Bbox++)
+  for(int i = 0; i < collWall.size(); i++)
+  {
+    int wallLeft = dynamic_cast<SDLGameObject*>(collWall[i])->GetPos().getX() + 10;
+    int wallRight = wallLeft + dynamic_cast<SDLGameObject*>(collWall[i])->GetWidth() - 25;
+    int wallTop = dynamic_cast<SDLGameObject*>(collWall[i])->GetPos().getY() + 10;
+    int wallBottom = wallTop + dynamic_cast<SDLGameObject*>(collWall[i])->GetHeight();
+
+    if(plyLeft <= wallRight && plyRight >= wallLeft && plyTop <= wallBottom 
+        && plyBottom >= wallTop)
+    {
+      // 아랫방향
+      if(m_velocity.getY() > 0 && plyBottom >= wallTop && plyBottom < wallBottom 
+          && plyLeft != wallRight && plyRight != wallLeft)
       {
-        leftB = b[Bbox]->m_x;
-        rightB = b[Bbox]->m_x + a[Bbox]->m_width;
-        topB = b[Bbox]->m_y;
-        bottomB = b[Bbox]->m_y + a[Bbox]->m_height;
+        m_position.setY(wallTop - m_height);
+        plyTop = m_position.getY();
+        plyBottom = plyTop + m_height;
 
+        m_velocity.setY(0);
+        Gravity(0.0);
+        JumpCount = 1;
+      }
+      // 윗방향
+      else if(m_velocity.getY() < 0 && plyTop <= wallBottom && plyTop > wallTop 
+          && plyLeft != wallRight && plyRight != wallLeft)
+      {
+        m_position.setY(wallBottom);
+        plyTop = m_position.getY();
+        plyBottom = plyTop + m_height;
+
+        m_velocity.setY(0);
+      }
+      // 왼방향
+      if(m_velocity.getX() < 0 && plyLeft <= wallRight && plyLeft > wallLeft 
+          && plyTop != wallBottom && plyBottom != wallTop)
+      {
+          m_position.setX(wallRight);
+          m_velocity.setX(0);
+      }
+      // 오른방향
+      else if(m_velocity.getX() > 0 && plyRight >= wallLeft && plyRight < wallRight 
+        && plyTop != wallBottom && plyBottom != wallTop)
+      {
+        m_position.setX(wallLeft - m_width);
+        m_velocity.setX(0);
       }
     }
-  if(bottomA <= topB)
-  {
-    return false;
-  }
-
-  if(topA >= bottomB){
-    return false;
-  }
-
-  if(rightA <= leftB)
-  {
-    return false;
-  }
-
-  if(leftA >= rightB)
-  {
-    return false;
-  }
-
-  return true;
     
+  }
+
+}
+
+void Player::Gravity(float gravity)
+{
+  m_acceleration.setY(gravity);
 }
 
 void Player::clean()

@@ -2,10 +2,9 @@
 #include "SDLGameObject.h"
 #include "InputHandler.h"
 #include "TextureManager.h"
-#include "Game.h"
 #include "SDL.h"
+#include "Game.h"
 #include <vector>
-
 
 class Player : public SDLGameObject
 {
@@ -16,15 +15,11 @@ public:
   virtual void clean();
   void handleInput();
   void init();
-  void move(std::vector<GameObject*> collider);
-  bool checkCollision(std::vector<GameObject*> a, std::vector<GameObject*> b);
-
+  void Gravity(float gravity);
+  void checkCollision();
 
 private:
-  
   int m_Num;
-  static Player* s_pInstance;
-  SDL_Rect mCollider;
+  int JumpCount;
 
 };
-
