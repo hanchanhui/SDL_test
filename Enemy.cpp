@@ -7,7 +7,7 @@ Enemy::Enemy(const LoaderParams* pParams) : SDLGameObject(pParams)
 
 void Enemy::draw()
 {
-  SDLGameObject::drawFrame();
+  SDLGameObject::draw();
 }
 
 void Enemy::update()

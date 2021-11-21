@@ -1,7 +1,6 @@
 #include "Player.h"
 
-Player::Player(const LoaderParams* pParams) : SDLGameObject(pParams) {}
-
+Player::Player(const LoaderParams* pParams) : SDLGameObject(pParams) , isGrounded(false), Atcount(false){}
 
 
 void Player::draw()
@@ -17,14 +16,16 @@ void Player::draw()
   }
 }
 
+
 void Player::update()
 {
   m_currentFrame = (SDL_GetTicks() / 100) % 6;
-
   handleInput();
   checkCollision();
   SDLGameObject::update();
 }
+
+
 
 void Player::handleInput()
 {
@@ -50,8 +51,16 @@ void Player::handleInput()
     }
   }
   // 공격
-  if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_LCTRL))
+  if(TheInputHandler::Instance()->getMouseButtonState(LEFT))
   {
+    Atcount = true;
+    if(Atcount){
+      Bullet* bullet = new Bullet(new LoaderParams(m_position.getX() + m_width,   m_position.getY(), 32, 32, "bullet"));
+
+      TheGame::Instance()->getBullet(bullet);
+    }
+    //SDL_Delay(1000);
+    Atcount = false;
     
   }
 

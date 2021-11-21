@@ -4,6 +4,7 @@
 #include "TextureManager.h"
 #include "SDL.h"
 #include "Game.h"
+#include "Bullet.h"
 #include <vector>
 
 class Player : public SDLGameObject
@@ -16,8 +17,10 @@ public:
   void handleInput();
   void Gravity(float gravity);
   void checkCollision();
+  
 
 private:
   bool isGrounded;
+  bool Atcount;
 
 };
