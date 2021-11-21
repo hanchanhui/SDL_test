@@ -1,6 +1,7 @@
 #include "Player.h"
+#include "Check.h"
 
-Player::Player(const LoaderParams* pParams) : SDLGameObject(pParams) , isGrounded(false), Atcount(false){}
+Player::Player(const LoaderParams* pParams) : SDLGameObject(pParams) , isGrounded(false), isFire(false) , plyDir(true){}
 
 
 void Player::draw()
@@ -33,10 +34,18 @@ void Player::handleInput()
   if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RIGHT)) {
     SDLGameObject::flip = SDL_FLIP_NONE;
     m_velocity.setX(2);
+    plyDir = true;
+    if(!TheGame::Instance()->getFire()){
+      TheCheck::Instance()->getbulflip(SDLGameObject::flip);
+    }
   }
   else if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_LEFT)) {
     SDLGameObject::flip = SDL_FLIP_HORIZONTAL;
     m_velocity.setX(-2);
+    plyDir = false;
+    if(!TheGame::Instance()->getFire()){
+      TheCheck::Instance()->getbulflip(SDLGameObject::flip);
+    }
   }
   else{
     m_velocity.setX(0);
@@ -51,17 +60,21 @@ void Player::handleInput()
     }
   }
   // 공격
-  if(TheInputHandler::Instance()->getMouseButtonState(LEFT))
+  if(TheInputHandler::Instance()->getMouseButtonState(LEFT) && !TheGame::Instance()->getFire())
   {
-    Atcount = true;
-    if(Atcount){
-      Bullet* bullet = new Bullet(new LoaderParams(m_position.getX() + m_width,   m_position.getY(), 32, 32, "bullet"));
-
+    isFire = true;
+    TheGame::Instance()->Firecheck(isFire);
+    
+    if(plyDir){
+      Bullet* bullet = new Bullet(new LoaderParams(m_position.getX() + m_width - 30,   m_position.getY() + 15, 32, 32, "bullet"));
       TheGame::Instance()->getBullet(bullet);
     }
-    //SDL_Delay(1000);
-    Atcount = false;
-    
+    if(!plyDir)
+    {
+      Bullet* bullet = new Bullet(new LoaderParams(m_position.getX(), m_position.getY() + 15, 32, 32, "bullet"));
+      TheGame::Instance()->getBullet(bullet);
+    }
+
   }
 
 }

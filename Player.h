@@ -17,10 +17,10 @@ public:
   void handleInput();
   void Gravity(float gravity);
   void checkCollision();
-  
 
 private:
   bool isGrounded;
-  bool Atcount;
+  bool isFire;
+  bool plyDir;
 
 };

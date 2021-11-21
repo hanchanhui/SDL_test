@@ -13,7 +13,7 @@
 class Game
 {
 public:
-  Game() {}
+  Game() : Fire(false){}
   static Game* Instance()
   {
     if (s_pInstance == 0) s_pInstance = new Game();
@@ -35,6 +35,8 @@ public:
   {
     m_bulletObjects.push_back(t);
   }
+  bool getFire() {return Fire;}
+  void Firecheck(bool a) { Fire = a;}
   
 
   void quit() { m_bRunning = false; }
@@ -46,6 +48,7 @@ private:
   SDL_Renderer* m_pRenderer;
   bool m_bRunning;
   int boxX;
+  bool Fire;
   
 
   std::vector<GameObject*> m_gameObjects;

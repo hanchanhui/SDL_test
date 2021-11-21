@@ -1,21 +1,35 @@
 #include "Bullet.h"
+#include "Check.h"
 
-Bullet::Bullet(const LoaderParams* pParams) : SDLGameObject(pParams)
+Bullet::Bullet(const LoaderParams* pParams) : SDLGameObject(pParams), bulflip(SDL_FLIP_NONE), setFire(true)
 {
 
 }
 
 void Bullet::draw()
 {
-  SDLGameObject::flip = SDL_FLIP_NONE;
+  if(setFire)
+  {
+    bulflipDir();
+    setFire = false;
+  }
   SDLGameObject::draw();
 }
 
 void Bullet::update()
 {
   m_acceleration.setY(0);
-  m_velocity.setX(1);
   BulletCollision();
+  Destory();
+  
+  if(SDLGameObject::flip == SDL_FLIP_NONE)
+  {
+    m_velocity.setX(5);
+  }
+  if(SDLGameObject::flip == SDL_FLIP_HORIZONTAL)
+  {
+    m_velocity.setX(-5);
+  }
   SDLGameObject::update();
 }
 
@@ -64,7 +78,8 @@ void Bullet::BulletCollision()
       {
           m_position.setX(wallRight);
           m_velocity.setX(0);
-         TheGame::Instance()->BulletDestory();
+         TheGame::Instance()->BulletDestory(); // 벽에 충돌시 삭제
+         setFire = true;
       }
       // 오른방향
       else if(m_velocity.getX() > 0 && bulRight >= wallLeft && bulRight < wallRight 
@@ -72,12 +87,37 @@ void Bullet::BulletCollision()
       {
         m_position.setX(wallLeft - m_width);
         m_velocity.setX(0);
-        TheGame::Instance()->BulletDestory();
+        TheGame::Instance()->BulletDestory(); // 벽에 충돌시 삭제
+        setFire = true;
       }
     }
     
   }
 
+}
+
+void Bullet::Destory()
+{
+  if(m_position.getX() < 0 || m_position.getX() > 640){
+    TheGame::Instance()->BulletDestory();
+  }
+  setFire = true;
+}
+
+void Bullet::bulflipDir()
+{
+  
+    if(TheCheck::Instance()->checkbulflip() == SDL_FLIP_NONE)
+    {
+      SDLGameObject::flip = TheCheck::Instance()->checkbulflip();
+     
+    }
+    if(TheCheck::Instance()->checkbulflip() == SDL_FLIP_HORIZONTAL)
+    {
+      SDLGameObject::flip = TheCheck::Instance()->checkbulflip();
+     
+    }
+  
 }
 
 

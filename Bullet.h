@@ -12,8 +12,11 @@ public:
   virtual void update();
   virtual void clean();
   void BulletCollision();
-  void BulletDestory();
+  void Destory();
+  void bulflipDir();
 
 public:
+  SDL_RendererFlip bulflip;
+  bool setFire;
   
 };

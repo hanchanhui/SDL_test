@@ -121,7 +121,7 @@ void Game::BulletDestory()
     m_bulletObjects.erase(m_bulletObjects.begin() + i);
     break;
   }
-  
+  Fire = false;
 }
 
 
