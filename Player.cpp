@@ -1,7 +1,8 @@
 #include "Player.h"
 #include "Check.h"
+#include "Camera.h"
 
-Player::Player(const LoaderParams* pParams) : SDLGameObject(pParams) , isGrounded(false), isFire(false) , plyDir(true){}
+Player::Player(const LoaderParams* pParams) : SDLGameObject(pParams) , isGrounded(false), isFire(false) , plyDir(true), ground(0){}
 
 
 void Player::draw()
@@ -23,6 +24,7 @@ void Player::update()
   m_currentFrame = (SDL_GetTicks() / 100) % 6;
   handleInput();
   checkCollision();
+  CameraMove();
   SDLGameObject::update();
 }
 
@@ -32,17 +34,19 @@ void Player::handleInput()
 {
   //좌우 키
   if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RIGHT)) {
-    SDLGameObject::flip = SDL_FLIP_NONE;
+    flip = SDL_FLIP_NONE;
     m_velocity.setX(2);
     plyDir = true;
+    ground += 1;
     if(!TheGame::Instance()->getFire()){
       TheCheck::Instance()->getbulflip(SDLGameObject::flip);
     }
   }
   else if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_LEFT)) {
-    SDLGameObject::flip = SDL_FLIP_HORIZONTAL;
+    flip = SDL_FLIP_HORIZONTAL;
     m_velocity.setX(-2);
     plyDir = false;
+    ground -= 1;
     if(!TheGame::Instance()->getFire()){
       TheCheck::Instance()->getbulflip(SDLGameObject::flip);
     }
@@ -51,7 +55,7 @@ void Player::handleInput()
     m_velocity.setX(0);
   }
   // 점프
-  if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_SPACE))
+  if(TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_UP))
   {
     if(isGrounded){
       m_velocity.setY(-10);
@@ -76,7 +80,19 @@ void Player::handleInput()
     }
 
   }
+  
+  
+  TheCamera::Instance()->getCameraRectX((m_position.getX() + (m_width / 2)) - 320);
+  TheCamera::Instance()->getCameraRectY((m_position.getY() + (m_height / 2)) - 250);
 
+  
+  if(TheCamera::Instance()->getCameraRect().x < 0){
+    TheCamera::Instance()->getCameraRectX(0);
+  }
+  if(TheCamera::Instance()->getCameraRect().y < 0){
+    TheCamera::Instance()->getCameraRectY(0);
+  }
+  
 }
 
 void Player::checkCollision()
@@ -131,7 +147,7 @@ void Player::checkCollision()
       else if(m_velocity.getX() > 0 && plyRight >= wallLeft && plyRight < wallRight 
         && plyTop != wallBottom && plyBottom != wallTop)
       {
-        m_position.setX(wallLeft - m_width + 20);
+        m_position.setX(wallLeft - m_width + 30);
         m_velocity.setX(0);
       }
     }
@@ -146,6 +162,12 @@ void Player::checkCollision()
 void Player::Gravity(float gravity)
 {
   m_acceleration.setY(gravity);
+}
+
+void Player::CameraMove()
+{
+  TheGame::Instance()->getCamRectX(m_position.getX() - (m_width / 2) - TheCamera::Instance()->getCameraRect().x);
+  TheGame::Instance()->getCamRectY(m_position.getY() - (m_height / 2) - TheCamera::Instance()->getCameraRect().y);
 }
 
 void Player::clean()

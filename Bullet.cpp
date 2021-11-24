@@ -110,13 +110,12 @@ void Bullet::bulflipDir()
     if(TheCheck::Instance()->checkbulflip() == SDL_FLIP_NONE)
     {
       SDLGameObject::flip = TheCheck::Instance()->checkbulflip();
-     
     }
     if(TheCheck::Instance()->checkbulflip() == SDL_FLIP_HORIZONTAL)
     {
       SDLGameObject::flip = TheCheck::Instance()->checkbulflip();
-     
     }
+    
   
 }
 

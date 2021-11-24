@@ -3,6 +3,7 @@
 //#include "Player.h"
 #include "Enemy.h"
 #include "Wall.h"
+#include "Camera.h"
 
 
 Game* Game::s_pInstance = 0;
@@ -65,7 +66,9 @@ void Game::render()
 {
   SDL_RenderClear(m_pRenderer);
 
-  TheTextureManager::Instance()->draw("Background",0, 0, 640, 360, m_pRenderer, SDL_FLIP_NONE);
+  TheTextureManager::Instance()->draw("Background",0, 0, 940, 360, m_pRenderer, SDL_FLIP_NONE);
+  //TheTextureManager::Instance()->Textload(0, 0, m_pRenderer);
+  
 
   for(int i = 0; i < m_gameObjects.size(); i++)
   {
@@ -118,7 +121,7 @@ void Game::BulletDestory()
 {
   for(int i = 0; i < m_bulletObjects.size(); i++)
   {
-    m_bulletObjects.erase(m_bulletObjects.begin() + i);
+    m_bulletObjects.erase(m_bulletObjects.begin());
     break;
   }
   Fire = false;

@@ -2,7 +2,6 @@
 
 #include "SDL.h"
 
-
 class Check {
   public:
     ~Check() {}
@@ -12,8 +11,9 @@ class Check {
       }
       return s_pInstance;
     }
-    
+    // 비교
     SDL_RendererFlip checkbulflip() { return bulflip; }
+    // 대입
     void getbulflip(SDL_RendererFlip a) { bulflip = a;} 
     
   public:

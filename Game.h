@@ -27,6 +27,7 @@ public:
   bool running();
   void handleEvents();
   void clean();
+  
   SDL_Renderer* getRenderer() const { return m_pRenderer; }
   std::vector<GameObject*> getWall() const { return m_wall; }
   std::vector<GameObject*> getBullet() const { return m_bulletObjects; }
@@ -37,6 +38,8 @@ public:
   }
   bool getFire() {return Fire;}
   void Firecheck(bool a) { Fire = a;}
+  void getCamRectX(int cam) { camRect.x = cam;}
+  void getCamRectY(int cam) { camRect.y = cam;}
   
 
   void quit() { m_bRunning = false; }
@@ -49,7 +52,7 @@ private:
   bool m_bRunning;
   int boxX;
   bool Fire;
-  
+  SDL_Rect camRect;
 
   std::vector<GameObject*> m_gameObjects;
   std::vector<GameObject*> m_bulletObjects;

@@ -17,10 +17,12 @@ public:
   void handleInput();
   void Gravity(float gravity);
   void checkCollision();
+  void CameraMove();
 
 private:
   bool isGrounded;
   bool isFire;
   bool plyDir;
+  int ground;
 
 };

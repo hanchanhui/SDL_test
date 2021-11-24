@@ -12,7 +12,7 @@ public:
 
 public:
 
-  Vector2D GetPosition() const { return m_position; }
+  //Vector2D GetPosition() const { return m_position; }
 
 
 };

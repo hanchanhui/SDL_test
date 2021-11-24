@@ -1,5 +1,6 @@
 #include "TextureManager.h"
 #include "SDL_image.h"
+#include "Camera.h"
 
 TextureManager* TextureManager::s_pInstance = 0;
 
@@ -19,6 +20,19 @@ bool TextureManager::load(std::string fileName, std::string id, SDL_Renderer* pR
   return false;
 }
 
+void TextureManager::Textload(int x, int y, SDL_Renderer* pRenderer)
+{
+  SDL_Color color = {255, 255, 255};
+  TTF_Font* font = TTF_OpenFont("Assets/arial.ttf", 25);
+  TTF_CloseFont(font);
+  SDL_Surface* surface = TTF_RenderText_Blended(font, "Hello", color);
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(pRenderer, surface);
+  SDL_FreeSurface(surface);
+  SDL_Rect r = {0, 0, surface->w, surface->h}; 
+  SDL_RenderCopyEx(pRenderer, texture, 0, &r, 0, 0, SDL_FLIP_NONE);
+
+}
+
 void TextureManager::draw(std::string id, int x, int y, int width, int height, SDL_Renderer* pRenderer, SDL_RendererFlip flip)
 {
   SDL_Rect srcRect;
@@ -28,8 +42,8 @@ void TextureManager::draw(std::string id, int x, int y, int width, int height, S
   srcRect.y = 0;
   srcRect.w = destRect.w = width;
   srcRect.h = destRect.h = height;
-  destRect.x = x;
-  destRect.y = y;
+  destRect.x = x - TheCamera::Instance()->getCameraRect().x;
+  destRect.y = y - TheCamera::Instance()->getCameraRect().y;
 
   SDL_RenderCopyEx(pRenderer, m_textureMap[id], &srcRect, &destRect, 0, 0, flip);
 }
@@ -43,8 +57,8 @@ void TextureManager::drawFrame(std::string id, int x, int y, int width, int heig
   srcRect.y = height * currentRow;
   srcRect.w = destRect.w = width;
   srcRect.h = destRect.h = height;
-  destRect.x = x;
-  destRect.y = y;
+  destRect.x = x - TheCamera::Instance()->getCameraRect().x;
+  destRect.y = y - TheCamera::Instance()->getCameraRect().y;
 
   SDL_RenderCopyEx(pRenderer, m_textureMap[id], &srcRect, &destRect, 0, 0, flip);
 }
